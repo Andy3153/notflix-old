@@ -2,10 +2,6 @@
 <h1 align="center">notflix-old</h1>
 <p align="center">f@#k netflix use notflix a tool which search magnet links and stream it with webtorrent</p>
 
-<p align="center">
-<img src="./preview.gif" alt="Video Preview" width="500px">
-</p>
-
 ## Why the fork?
 I liked the old version of Notflix more and I wanted to get it back up and running.
 Then, I realised I changed a lot of things and I decided to fork it and publish it.
