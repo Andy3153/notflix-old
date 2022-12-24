@@ -14,16 +14,15 @@ baseurl="https://1337x.to"
 cachedir="$HOME/.cache/notflix"
 
 if [ -z $1 ]; then
-  query=$(dmenu -p "Search Torrent: " <&-)
+  query=$(dmenu -p "🔎 Search Torrent: " <&-)
 else
   query=$1
 fi
 
 if [ -z $query ]; then
-  notify-send "😔 No query entered. Quitting 🔴" -i "NONE"
+  notify-send "🤨 No query entered. Quitting 🔴" -i "NONE"
   exit 0
 fi
-
 
 query="$(echo $query | sed 's/ /+/g')"
 
@@ -70,7 +69,7 @@ if [ -z "$LINE" ]; then
   notify-send "😔 No Result selected. Exiting... 🔴" -i "NONE"
   exit 0
 fi
-notify-send "🔍 Searching Magnet seeds 🧲" -i "NONE"
+notify-send "🔎 Searching Magnet seeds 🧲" -i "NONE"
 url=$(head -n $LINE $cachedir/links.bw | tail -n +$LINE)
 fullURL="${baseurl}${url}/"
 
@@ -78,4 +77,4 @@ fullURL="${baseurl}${url}/"
 curl -s $fullURL > $cachedir/tmp.html
 magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n 1)
 
-webtorrent "$magnet" --mpv & notify-send "🎥 Enjoy Watching ☺️ " -i "NONE"
+webtorrent "$magnet" --mpv & notify-send "🎥 Enjoy Watching 😀" -i "NONE"
