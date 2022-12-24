@@ -18,6 +18,7 @@ For scraping, the script uses simple gnu utils like sed, awk, paste, cut.
 - curl
 - dmenu
 - gawk
+- grep
 - libnotify
 - mpv
 - sed
