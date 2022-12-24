@@ -7,25 +7,33 @@
 ##  curl dmenu libnotify mpv webtorrent-cli
 ##
 
-mkdir -p $HOME/.cache/notflix
-
+# {{{ Variables
 menu="dmenu -i -l 25"
 baseurl="https://1337x.to"
 cachedir="$HOME/.cache/notflix"
+# }}}
 
+# {{{ Setup
+mkdir -p $cachedir                     # Create cache folder
+
+# {{{ Get search query
 if [ -z $1 ]; then
   query=$(dmenu -p "🔎 Search Torrent: " <&-)
 else
   query=$1
 fi
 
+# Checking if a query got entered
 if [ -z $query ]; then
   notify-send "🤨 No query entered. Quitting 🔴" -i "NONE"
   exit 0
 fi
+# }}}
 
-query="$(echo $query | sed 's/ /+/g')"
+query="$(echo $query | sed 's/ /+/g')" # Format query correctly
+# }}}
 
+# {{{ Getting searches
 curl -s $baseurl/search/$query/1/ > $cachedir/tmp.html
 
 # Get Titles
@@ -33,11 +41,15 @@ grep -o '<a href="/torrent/.*</a>' $cachedir/tmp.html |
   sed 's/<[^>]*>//g' > $cachedir/titles.bw
 
 result_count=$(wc -l $cachedir/titles.bw | awk '{print $1}')
+
+# Check if search exists
 if [ "$result_count" -lt 1 ]; then
   notify-send "😔 No Result found. Try again 🔴" -i "NONE"
   exit 0
 fi
+# }}}
 
+# {{{ Preparing shown results
 # Seeders and Leechers
 grep -o '<td class="coll-2 seeds.*</td>\|<td class="coll-3 leeches.*</td>' $cachedir/tmp.html |
   sed 's/<[^>]*>//g' | sed 'N;s/\n/ /' > $cachedir/seedleech.bw
@@ -58,23 +70,33 @@ sed 's/\./ /g; s/\-/ /g' $cachedir/titles.bw |
 
 awk '{print NR " - ["$0"]"}' $cachedir/size.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/size.bw
 awk '{print "[S:"$1 ", L:"$2"]" }' $cachedir/seedleech.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/seedleech.bw
+# }}}
 
-# Getting the line number
+# {{{ Getting selection from menu
 LINE=$(paste -d\   $cachedir/size.bw $cachedir/seedleech.bw $cachedir/titles.bw |
   $menu |
   cut -d\- -f1 |
   awk '{$1=$1; print}')
 
+# Checking if a line got selected
 if [ -z "$LINE" ]; then
   notify-send "😔 No Result selected. Exiting... 🔴" -i "NONE"
   exit 0
 fi
+# }}}
+
+# {{{ Searching magnet links
 notify-send "🔎 Searching Magnet seeds 🧲" -i "NONE"
 url=$(head -n $LINE $cachedir/links.bw | tail -n +$LINE)
 fullURL="${baseurl}${url}/"
+# }}}
 
-# Requesting page for magnet link
+# {{{ Requesting page for magnet link
 curl -s $fullURL > $cachedir/tmp.html
 magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n 1)
+# }}}
 
-webtorrent "$magnet" --mpv & notify-send "🎥 Enjoy Watching 😀" -i "NONE"
+# {{{ Playing the selected torrent
+webtorrent "$magnet" --mpv &
+notify-send "🎥 Enjoy Watching 😀" -i "NONE"
+# }}}
