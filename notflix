@@ -3,8 +3,8 @@
 ##
 ## Notflix -- old version
 ##
-## Dependencies:
-##  curl dmenu libnotify mpv webtorrent-cli
+## Dependencies (in Arch Linux package names):
+##  coreutils curl dmenu gawk libnotify mpv sed webtorrent-cli
 ##
 
 # {{{ Variables
