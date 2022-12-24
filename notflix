@@ -1,6 +1,11 @@
 #!/bin/sh
-
-# Dependencies - webtorrent, mpv
+## vim: set fenc=utf-8 ts=2 sw=0 sts=0 sr et si tw=0 fdm=marker fmr={{{,}}}:
+##
+## Notflix -- old version
+##
+## Dependencies:
+##  curl dmenu webtorrent-cli mpv
+##
 
 mkdir -p $HOME/.cache/notflix
 
@@ -16,7 +21,6 @@ fi
 
 query="$(echo $query | sed 's/ /+/g')"
 
-#curl -s https://1337x.to/category-search/$query/Movies/1/ > $cachedir/tmp.html
 curl -s $baseurl/search/$query/1/ > $cachedir/tmp.html
 
 # Get Titles
@@ -68,7 +72,4 @@ fullURL="${baseurl}${url}/"
 curl -s $fullURL > $cachedir/tmp.html
 magnet=$(grep -Po "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n 1)
 
-webtorrent "$magnet" --mpv
-
-# Simple notification
-notify-send "🎥 Enjoy Watching ☺️ " -i "NONE"
+webtorrent "$magnet" --mpv & notify-send "🎥 Enjoy Watching ☺️ " -i "NONE"
