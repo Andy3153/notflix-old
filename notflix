@@ -19,6 +19,12 @@ else
   query=$1
 fi
 
+if [ -z $query ]; then
+  notify-send "😔 No query entered. Quitting 🔴" -i "NONE"
+  exit 0
+fi
+
+
 query="$(echo $query | sed 's/ /+/g')"
 
 curl -s $baseurl/search/$query/1/ > $cachedir/tmp.html
