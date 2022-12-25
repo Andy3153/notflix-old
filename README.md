@@ -56,7 +56,7 @@ $ sudo chmod +x /usr/local/bin/notflix
 
 <!-- {{{ TODO -->
 ## TODO:
-- [ ] Create AUR PKGBUILD
+- [x] Create AUR PKGBUILD
 - [ ] Add desktop entry (?)
 - [ ] Add support for more menus (?)
 <!-- }}} -->
