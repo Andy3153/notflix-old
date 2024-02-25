@@ -9,7 +9,7 @@
 
 # {{{ Variables
 menu="dmenu -i -l 25"
-baseurl="https://1337x.to"
+baseurl="https://1337xx.to"
 cachedir="$HOME/.cache/notflix"
 # }}}
 
